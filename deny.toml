@@ -1,0 +1,6 @@
+[licenses]
+allow = []
+
+[[licenses.exceptions]]
+name = "uniq-ch"
+allow = ["MIT"]

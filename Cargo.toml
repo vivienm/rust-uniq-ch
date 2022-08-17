@@ -1,0 +1,10 @@
+[package]
+name = "uniq-ch"
+version = "0.1.0"
+edition = "2021"
+description = "A Rust implementation of ClickHouse uniques hash sets."
+repository = "https://github.com/vivienm/rust-uniq-ch/"
+documentation = "https://vivienm.github.io/rust-uniq-ch/"
+license = "MIT"
+
+[dependencies]

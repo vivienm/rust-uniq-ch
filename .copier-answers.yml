@@ -1,0 +1,16 @@
+# Changes here will be overwritten by Copier. NEVER EDIT MANUALLY.
+
+_commit: 6b1503b
+_src_path: /home/vivien/perso/projects/copier/rust
+author_fullname: Vivien Maisonneuve
+copyright_date: '2022'
+copyright_holder: Vivien Maisonneuve
+copyright_license: MIT
+package_name: uniq-ch
+pages_enabled: true
+project_description: A Rust implementation of ClickHouse uniques hash sets.
+project_name: uniq-ch
+project_type: lib
+repository_name: rust-uniq-ch
+repository_namespace: vivienm
+repository_provider: github.com
