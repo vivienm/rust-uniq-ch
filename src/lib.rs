@@ -417,19 +417,19 @@ where
     /// assert!(99_000..=101_000).contains(&lhs.len());
     /// ```
     fn bitor(self, rhs: &Bjkst<T, S>) -> Self::Output {
-        let mut res: Bjkst<T, S> = Bjkst::default();
+        let mut bjkst: Bjkst<T, S> = Bjkst::default();
 
-        res.skip_degree = self.skip_degree.max(rhs.skip_degree);
+        bjkst.skip_degree = self.skip_degree.max(rhs.skip_degree);
 
         if self.has_zero || rhs.has_zero {
-            res.has_zero = true;
-            res.count = 1;
+            bjkst.has_zero = true;
+            bjkst.count = 1;
         }
 
         for hash in self.hashes.iter().chain(rhs.hashes.iter()).flatten() {
-            res.insert_hash(hash.get());
+            bjkst.insert_hash(hash.get());
         }
-        res
+        bjkst
     }
 }
 
@@ -492,5 +492,35 @@ where
     #[inline]
     fn default() -> Self {
         Self::with_hasher(S::default())
+    }
+}
+
+impl<'a, T, S> Extend<&'a T> for Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher,
+{
+    fn extend<I>(&mut self, iter: I)
+    where
+        I: IntoIterator<Item = &'a T>,
+    {
+        for value in iter {
+            self.insert(value);
+        }
+    }
+}
+
+impl<T, S> Extend<T> for Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher,
+{
+    fn extend<I>(&mut self, iter: I)
+    where
+        I: IntoIterator<Item = T>,
+    {
+        for value in iter {
+            self.insert(&value);
+        }
     }
 }
