@@ -402,6 +402,42 @@ where
     }
 }
 
+impl<T, S> BitOr<&Bjkst<T, S>> for &Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher + Default,
+{
+    type Output = Bjkst<T, S>;
+
+    /// Returns the union of `self` and `rhs` as a new `Bjkst<S, T>`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uniq_ch::Bjkst;
+    ///
+    /// let lhs: Bjkst<usize> = Bjkst::from_iter(0..75_000);
+    /// let rhs: Bjkst<usize> = Bjkst::from_iter(25_000..100_000);
+    /// let bjkst = lhs | rhs;
+    /// assert!(99_000..=101_000).contains(&lhs.len());
+    /// ```
+    fn bitor(self, rhs: &Bjkst<T, S>) -> Self::Output {
+        let mut res: Bjkst<T, S> = Bjkst::default();
+
+        res.skip_degree = self.skip_degree.max(rhs.skip_degree);
+
+        if self.has_zero || rhs.has_zero {
+            res.has_zero = true;
+            res.count = 1;
+        }
+
+        for hash in self.hashes.iter().chain(rhs.hashes.iter()).flatten() {
+            res.insert_hash(hash.get());
+        }
+        res
+    }
+}
+
 impl<T, S> BitOrAssign<&Bjkst<T, S>> for Bjkst<T, S>
 where
     T: Hash,
