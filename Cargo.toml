@@ -8,3 +8,8 @@ documentation = "https://vivienm.github.io/rust-uniq-ch/"
 license = "MIT"
 
 [dependencies]
+
+[dev-dependencies]
+anyhow = "1.0.62"
+clap = { version = "3.2.17", features = ["derive"] }
+plotters = "0.3.3"
