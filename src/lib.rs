@@ -431,10 +431,8 @@ where
             self.adjust_to_fit();
         }
 
-        for hash in rhs.hashes.iter() {
-            if let Some(hash) = hash {
-                self.insert_hash(hash.get());
-            }
+        for hash in rhs.hashes.iter().flatten() {
+            self.insert_hash(hash.get());
         }
     }
 }
