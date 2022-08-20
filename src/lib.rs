@@ -8,7 +8,7 @@ use std::{
     hash::{BuildHasher, Hash, Hasher},
     marker::PhantomData,
     num::NonZeroU64,
-    ops::BitOrAssign,
+    ops::{BitOr, BitOrAssign},
 };
 
 /// The maximum degree of buffer size before the values are discarded.
@@ -27,7 +27,7 @@ const BITS_FOR_SKIP: u8 = 32 - MAX_SIZE_DEGREE;
 /// Initial buffer size degree.
 const INITIAL_SIZE_DEGREE: u8 = 4;
 
-#[derive(Clone, Debug)]
+#[derive(Debug)]
 pub struct Bjkst<T, S = RandomState> {
     phantom: PhantomData<T>,
     build_hasher: S,
@@ -435,6 +435,23 @@ where
             if let Some(hash) = hash {
                 self.insert_hash(hash.get());
             }
+        }
+    }
+}
+
+impl<T, S> Clone for Bjkst<T, S>
+where
+    S: Clone,
+{
+    fn clone(&self) -> Self {
+        Self {
+            phantom: self.phantom.clone(),
+            build_hasher: self.build_hasher.clone(),
+            count: self.count.clone(),
+            size_degree: self.size_degree.clone(),
+            skip_degree: self.skip_degree.clone(),
+            has_zero: self.has_zero.clone(),
+            hashes: self.hashes.clone(),
         }
     }
 }
