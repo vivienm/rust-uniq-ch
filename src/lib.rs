@@ -3,7 +3,6 @@
 // https://github.com/ClickHouse/ClickHouse/blob/894b1b163e982c6929ab451467f6e253e7e3648b/src/AggregateFunctions/UniquesHashSet.h
 
 use std::{
-    borrow::Borrow,
     collections::hash_map::RandomState,
     hash::{BuildHasher, Hash, Hasher},
     marker::PhantomData,
@@ -359,11 +358,7 @@ where
     /// bjkst.insert(&2);
     /// assert_eq!(bjkst.len(), 1);
     /// ```
-    pub fn insert<Q>(&mut self, value: &Q)
-    where
-        T: Borrow<Q>,
-        Q: Hash + ?Sized,
-    {
+    pub fn insert(&mut self, value: &T) {
         self.insert_hash(self.hash(value));
     }
 
