@@ -524,3 +524,33 @@ where
         }
     }
 }
+
+impl<'a, T, S> FromIterator<&'a T> for Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher + Default,
+{
+    fn from_iter<I>(iter: I) -> Self
+    where
+        I: IntoIterator<Item = &'a T>,
+    {
+        let mut bjkst = Bjkst::default();
+        bjkst.extend(iter);
+        bjkst
+    }
+}
+
+impl<T, S> FromIterator<T> for Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher + Default,
+{
+    fn from_iter<I>(iter: I) -> Self
+    where
+        I: IntoIterator<Item = T>,
+    {
+        let mut bjkst = Bjkst::default();
+        bjkst.extend(iter);
+        bjkst
+    }
+}
