@@ -1,6 +1,11 @@
 [licenses]
-allow = []
+allow = [
+  "ISC",
+  "MIT",
+  "MPL-2.0",
+  "Zlib",
+]
 
 [[licenses.exceptions]]
-name = "uniq-ch"
-allow = ["MIT"]
+name = "unicode-ident"
+allow = ["Unicode-DFS-2016"]
