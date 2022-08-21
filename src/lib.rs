@@ -566,6 +566,39 @@ where
     }
 }
 
+impl<'a, T, S, const N: usize> From<[&'a T; N]> for Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher + Default,
+{
+    #[inline]
+    fn from(values: [&'a T; N]) -> Self {
+        Self::from_iter(values)
+    }
+}
+
+impl<T, S, const N: usize> From<[T; N]> for Bjkst<T, S>
+where
+    T: Hash,
+    S: BuildHasher + Default,
+{
+    /// Creates a new `Bjkst<T, S>` from an array of `T`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uniq_ch::Bjkst;
+    ///
+    /// let bjkst1: Bjkst<i32> = Bjkst::from([1, 2, 3, 4, 5]);
+    /// let bjkst2: Bjkst<i32> = [1, 2, 3, 4, 5].into();
+    /// assert_eq!(bjkst1.len(), bjkst2.len());
+    /// ```
+    #[inline]
+    fn from(values: [T; N]) -> Self {
+        Self::from_iter(values)
+    }
+}
+
 impl<'a, T, S> FromIterator<&'a T> for Bjkst<T, S>
 where
     T: Hash,
