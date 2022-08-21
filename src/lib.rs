@@ -23,6 +23,7 @@
 //! // Count the distinct elements.
 //! assert!((99_000..101_000).contains(&bjkst.len()));
 //! ```
+#![cfg_attr(doc, feature(doc_auto_cfg))]
 use std::{
     collections::hash_map::DefaultHasher,
     hash::{BuildHasher, BuildHasherDefault, Hash, Hasher},
@@ -592,5 +593,47 @@ where
         let mut bjkst = Bjkst::default();
         bjkst.extend(iter);
         bjkst
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<T, S> serde::Serialize for Bjkst<T, S>
+where
+    S: Default,
+{
+    fn serialize<R>(&self, serializer: R) -> Result<R::Ok, R::Error>
+    where
+        R: serde::Serializer,
+    {
+        (
+            self.count,
+            self.size_degree,
+            self.skip_degree,
+            self.has_zero,
+            &self.hashes,
+        )
+            .serialize(serializer)
+    }
+}
+
+#[cfg(feature = "serde")]
+impl<'de, T, S> serde::Deserialize<'de> for Bjkst<T, S>
+where
+    S: Default,
+{
+    fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        let (count, size_degree, skip_degree, has_zero, hashes) =
+            serde::Deserialize::deserialize(deserializer)?;
+        Ok(Self {
+            count,
+            size_degree,
+            skip_degree,
+            has_zero,
+            hashes,
+            ..Self::default()
+        })
     }
 }

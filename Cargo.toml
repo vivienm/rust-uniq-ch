@@ -8,8 +8,12 @@ documentation = "https://vivienm.github.io/rust-uniq-ch/uniq_ch/"
 license = "MIT"
 
 [dependencies]
+serde = { version = "1.0.144", features = ["derive"], optional = true }
 
 [dev-dependencies]
 anyhow = "1.0.62"
 clap = { version = "3.2.17", features = ["derive"] }
 plotters = { version = "0.3.3", default-features = false, features = ["area_series", "bitmap_backend", "bitmap_encoder"] }
+
+[features]
+serde = ["dep:serde"]
