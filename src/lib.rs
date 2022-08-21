@@ -1,7 +1,28 @@
-//! A Rust implementation of ClickHouse uniques hash sets.
-
-// https://github.com/ClickHouse/ClickHouse/blob/894b1b163e982c6929ab451467f6e253e7e3648b/src/AggregateFunctions/UniquesHashSet.h
-
+//! A Rust implementation of [ClickHouse `uniq`][ClickHouseRefUniq] data structure
+//! for counting distinct elements in a data stream ([source][ClickHouseSrcUniq]).
+//!
+//! This uses on [BJKST][BarYossef+02], a probabilistic algorithm that relies on adaptive sampling
+//! and provides fast, accurate and deterministic results. Two BJKSTs can be merged, making the
+//! data structure well suited for map-reduce settings.
+//!
+//! [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
+//! [ClickHouseRefUniq]: <https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/>
+//! [ClickHouseSrcUniq]: <https://github.com/ClickHouse/ClickHouse/blob/894b1b163e982c6929ab451467f6e253e7e3648b/src/AggregateFunctions/UniquesHashSet.h>
+//!
+//! # Examples
+//!
+//! ```
+//! use uniq_ch::Bjkst;
+//!
+//! let mut bjkst: Bjkst<usize> = Bjkst::new();
+//!
+//! // Add some elements, with duplicates.
+//! bjkst.extend(0..75_000);
+//! bjkst.extend(25_000..100_000);
+//!
+//! // Count the distinct elements.
+//! assert!((99_000..101_000).contains(&bjkst.len()));
+//! ```
 use std::{
     collections::hash_map::DefaultHasher,
     hash::{BuildHasher, BuildHasherDefault, Hash, Hasher},
@@ -29,7 +50,23 @@ const INITIAL_SIZE_DEGREE: u8 = 4;
 /// A [BJKST][BarYossef+02] data structure to estimate the number of distinct elements in a data
 /// stream.
 ///
-/// [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
+/// [BarYossef+02]: <https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276>
+///
+/// # Examples
+///
+/// ```
+/// use uniq_ch::Bjkst;
+///
+/// let mut bjkst: Bjkst<usize> = Bjkst::new();
+///
+/// // Add some elements, with duplicates.
+/// bjkst.extend(0..75_000);
+/// bjkst.extend(25_000..100_000);
+///
+/// // Count the distinct elements.
+/// assert!((99_000..101_000).contains(&bjkst.len()));
+/// ```
+
 #[derive(Debug)]
 pub struct Bjkst<T, S = BuildHasherDefault<DefaultHasher>> {
     phantom: PhantomData<T>,
