@@ -26,6 +26,10 @@ const BITS_FOR_SKIP: u8 = 32 - MAX_SIZE_DEGREE;
 /// Initial buffer size degree.
 const INITIAL_SIZE_DEGREE: u8 = 4;
 
+/// A [BJKST][BarYossef+02] data structure to estimate the number of distinct elements in a data
+/// stream.
+///
+/// [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
 #[derive(Debug)]
 pub struct Bjkst<T, S = BuildHasherDefault<DefaultHasher>> {
     phantom: PhantomData<T>,
