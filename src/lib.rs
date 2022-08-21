@@ -296,8 +296,8 @@ impl<T, S> Bjkst<T, S> {
         // If the element was to be at the end of the old buffer (`x`)                   [        x]
         // but is at the beginning because of the collision resolution chain (`o`)       [o       x]
         // then after resizing, it will first be out of place again.                     [        xo        ]
-        // Transfering it to the right location requires,
-        // after transfering all elements from the old half of the buffer,               [         o   x    ]
+        // Transferring it to the right location requires,
+        // after transferring all elements from the old half of the buffer,              [         o   x    ]
         // to process the tail of the collision resolution chain that follows.           [        o    x    ]
         // This is why we don't necessarily stop when `i >= old_size`,
         for i in 0.. {
