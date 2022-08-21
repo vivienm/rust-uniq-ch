@@ -397,12 +397,12 @@ where
     }
 }
 
-impl<T, S> BitOr<&Bjkst<T, S>> for &Bjkst<T, S>
+impl<T, H> BitOr<&Bjkst<T, BuildHasherDefault<H>>> for &Bjkst<T, BuildHasherDefault<H>>
 where
     T: Hash,
-    S: BuildHasher + Default,
+    H: Default + Hasher,
 {
-    type Output = Bjkst<T, S>;
+    type Output = Bjkst<T, BuildHasherDefault<H>>;
 
     /// Returns the union of `self` and `rhs` as a new `Bjkst<S, T>`.
     ///
@@ -416,8 +416,8 @@ where
     /// let bjkst = &lhs | &rhs;
     /// assert!((99_000..=101_000).contains(&bjkst.len()));
     /// ```
-    fn bitor(self, rhs: &Bjkst<T, S>) -> Self::Output {
-        let mut bjkst: Bjkst<T, S> = Bjkst::default();
+    fn bitor(self, rhs: &Bjkst<T, BuildHasherDefault<H>>) -> Self::Output {
+        let mut bjkst: Bjkst<T, BuildHasherDefault<H>> = Bjkst::default();
 
         bjkst.skip_degree = self.skip_degree.max(rhs.skip_degree);
 
@@ -433,10 +433,10 @@ where
     }
 }
 
-impl<T, S> BitOrAssign<&Bjkst<T, S>> for Bjkst<T, S>
+impl<T, H> BitOrAssign<&Bjkst<T, BuildHasherDefault<H>>> for Bjkst<T, BuildHasherDefault<H>>
 where
     T: Hash,
-    S: BuildHasher,
+    H: Default + Hasher,
 {
     /// Merges `self` and `rhs` into `self`.
     ///
@@ -450,7 +450,7 @@ where
     /// lhs |= &rhs;
     /// assert!((99_000..=101_000).contains(&lhs.len()));
     /// ```
-    fn bitor_assign(&mut self, rhs: &Bjkst<T, S>) {
+    fn bitor_assign(&mut self, rhs: &Bjkst<T, BuildHasherDefault<H>>) {
         if rhs.skip_degree > self.skip_degree {
             self.skip_degree = rhs.skip_degree;
             self.purge();
