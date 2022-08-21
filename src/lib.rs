@@ -3,8 +3,8 @@
 // https://github.com/ClickHouse/ClickHouse/blob/894b1b163e982c6929ab451467f6e253e7e3648b/src/AggregateFunctions/UniquesHashSet.h
 
 use std::{
-    collections::hash_map::RandomState,
-    hash::{BuildHasher, Hash, Hasher},
+    collections::hash_map::DefaultHasher,
+    hash::{BuildHasher, BuildHasherDefault, Hash, Hasher},
     marker::PhantomData,
     num::NonZeroU64,
     ops::{BitOr, BitOrAssign},
@@ -27,7 +27,7 @@ const BITS_FOR_SKIP: u8 = 32 - MAX_SIZE_DEGREE;
 const INITIAL_SIZE_DEGREE: u8 = 4;
 
 #[derive(Debug)]
-pub struct Bjkst<T, S = RandomState> {
+pub struct Bjkst<T, S = BuildHasherDefault<DefaultHasher>> {
     phantom: PhantomData<T>,
     build_hasher: S,
     /// The number of elements.
@@ -41,7 +41,7 @@ pub struct Bjkst<T, S = RandomState> {
     hashes: Vec<Option<NonZeroU64>>,
 }
 
-impl<T> Bjkst<T, RandomState> {
+impl<T> Bjkst<T, BuildHasherDefault<DefaultHasher>> {
     /// Creates an empty `Bjkst`.
     ///
     /// # Examples
@@ -75,7 +75,7 @@ impl<T, S> Bjkst<T, S> {
     /// use uniq_ch::Bjkst;
     ///
     /// let hasher = RandomState::new();
-    /// let mut bjkst: Bjkst<usize> = Bjkst::with_hasher(hasher);
+    /// let mut bjkst = Bjkst::<usize, _>::with_hasher(hasher);
     /// bjkst.insert(&2);
     /// ```
     #[inline]
@@ -105,7 +105,7 @@ impl<T, S> Bjkst<T, S> {
     /// use uniq_ch::Bjkst;
     ///
     /// let hasher = RandomState::new();
-    /// let mut bjkst: Bjkst<usize> = Bjkst::with_hasher(hasher);
+    /// let mut bjkst = Bjkst::<usize, _>::with_hasher(hasher);
     /// let hasher: &RandomState = bjkst.hasher();
     /// ```
     #[inline]
@@ -413,8 +413,8 @@ where
     ///
     /// let lhs: Bjkst<usize> = Bjkst::from_iter(0..75_000);
     /// let rhs: Bjkst<usize> = Bjkst::from_iter(25_000..100_000);
-    /// let bjkst = lhs | rhs;
-    /// assert!(99_000..=101_000).contains(&lhs.len());
+    /// let bjkst = &lhs | &rhs;
+    /// assert!((99_000..=101_000).contains(&bjkst.len()));
     /// ```
     fn bitor(self, rhs: &Bjkst<T, S>) -> Self::Output {
         let mut bjkst: Bjkst<T, S> = Bjkst::default();
@@ -445,10 +445,10 @@ where
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut lhs: Bjkst<i32> = Bjkst::from_iter(1...75_000);
-    /// let rhs: Bjkst<i32> = Bjkst::from_iter(25_000...100_000);
+    /// let mut lhs: Bjkst<i32> = Bjkst::from_iter(1..75_000);
+    /// let rhs: Bjkst<i32> = Bjkst::from_iter(25_000..100_000);
     /// lhs |= &rhs;
-    /// assert!(99_000..=101_000).contains(&lhs.len());
+    /// assert!((99_000..=101_000).contains(&lhs.len()));
     /// ```
     fn bitor_assign(&mut self, rhs: &Bjkst<T, S>) {
         if rhs.skip_degree > self.skip_degree {
