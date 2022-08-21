@@ -395,9 +395,7 @@ where
         let mut res = self.count as u64 * (1 << self.skip_degree) as u64;
         res += self.hash(&self.count) & ((1 << self.skip_degree) - 1);
         let p32 = 1 << 32;
-        let fixed_res =
-            f64::round(p32 as f64 * (f64::ln(p32 as f64) - f64::ln((p32 - res) as f64))) as usize;
-        fixed_res
+        f64::round(p32 as f64 * (f64::ln(p32 as f64) - f64::ln((p32 - res) as f64))) as usize
     }
 }
 
@@ -421,9 +419,10 @@ where
     /// assert!((99_000..=101_000).contains(&bjkst.len()));
     /// ```
     fn bitor(self, rhs: &Bjkst<T, BuildHasherDefault<H>>) -> Self::Output {
-        let mut bjkst: Bjkst<T, BuildHasherDefault<H>> = Bjkst::default();
-
-        bjkst.skip_degree = self.skip_degree.max(rhs.skip_degree);
+        let mut bjkst = Bjkst {
+            skip_degree: self.skip_degree.max(rhs.skip_degree),
+            ..Default::default()
+        };
 
         if self.has_zero || rhs.has_zero {
             bjkst.has_zero = true;
@@ -478,12 +477,12 @@ where
 {
     fn clone(&self) -> Self {
         Self {
-            phantom: self.phantom.clone(),
+            phantom: self.phantom,
             build_hasher: self.build_hasher.clone(),
-            count: self.count.clone(),
-            size_degree: self.size_degree.clone(),
-            skip_degree: self.skip_degree.clone(),
-            has_zero: self.has_zero.clone(),
+            count: self.count,
+            size_degree: self.size_degree,
+            skip_degree: self.skip_degree,
+            has_zero: self.has_zero,
             hashes: self.hashes.clone(),
         }
     }
