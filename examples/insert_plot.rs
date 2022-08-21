@@ -59,7 +59,7 @@ where
 fn main() -> anyhow::Result<()> {
     let args = Args::parse();
     let mut durations = Vec::with_capacity(args.size);
-    let mut bjkst: Bjkst<usize> = Bjkst::new();
+    let mut bjkst = Bjkst::<usize>::new();
     let build_hasher = RandomState::new();
 
     for i in 1..=args.size {

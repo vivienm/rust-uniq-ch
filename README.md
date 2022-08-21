@@ -21,7 +21,7 @@ settings.
 ```rust
 use uniq_ch::Bjkst;
 
-let mut bjkst: Bjkst<usize> = Bjkst::new();
+let mut bjkst = Bjkst::new();
 
 // Add some elements, with duplicates.
 bjkst.extend(0..75_000);

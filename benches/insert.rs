@@ -8,10 +8,10 @@ use uniq_ch::Bjkst;
 #[bench]
 fn insert_10k(bench: &mut Bencher) {
     bench.iter(|| {
-        let mut uniq: Bjkst<usize> = Bjkst::new();
+        let mut bjkst = Bjkst::new();
 
         for i in 1..=10_000 {
-            uniq.insert(&i);
+            bjkst.insert(&i);
         }
     })
 }

@@ -14,7 +14,7 @@
 //! ```
 //! use uniq_ch::Bjkst;
 //!
-//! let mut bjkst: Bjkst<usize> = Bjkst::new();
+//! let mut bjkst = Bjkst::new();
 //!
 //! // Add some elements, with duplicates.
 //! bjkst.extend(0..75_000);
@@ -58,7 +58,7 @@ const INITIAL_SIZE_DEGREE: u8 = 4;
 /// ```
 /// use uniq_ch::Bjkst;
 ///
-/// let mut bjkst: Bjkst<usize> = Bjkst::new();
+/// let mut bjkst = Bjkst::new();
 ///
 /// // Add some elements, with duplicates.
 /// bjkst.extend(0..75_000);
@@ -91,7 +91,7 @@ impl<T> Bjkst<T, BuildHasherDefault<DefaultHasher>> {
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let uniq: Bjkst<usize> = Bjkst::new();
+    /// let bjkst = Bjkst::<usize>::new();
     /// ```
     #[inline]
     pub fn new() -> Self {
@@ -117,7 +117,7 @@ impl<T, S> Bjkst<T, S> {
     /// use uniq_ch::Bjkst;
     ///
     /// let hasher = RandomState::new();
-    /// let mut bjkst = Bjkst::<usize, _>::with_hasher(hasher);
+    /// let mut bjkst = Bjkst::with_hasher(hasher);
     /// bjkst.insert(&2);
     /// ```
     #[inline]
@@ -147,7 +147,7 @@ impl<T, S> Bjkst<T, S> {
     /// use uniq_ch::Bjkst;
     ///
     /// let hasher = RandomState::new();
-    /// let mut bjkst = Bjkst::<usize, _>::with_hasher(hasher);
+    /// let bjkst = Bjkst::<usize, _>::with_hasher(hasher);
     /// let hasher: &RandomState = bjkst.hasher();
     /// ```
     #[inline]
@@ -162,7 +162,7 @@ impl<T, S> Bjkst<T, S> {
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut bjkst: Bjkst<usize> = Bjkst::new();
+    /// let mut bjkst = Bjkst::new();
     /// bjkst.insert(&1);
     /// bjkst.clear();
     /// assert!(bjkst.is_empty());
@@ -183,7 +183,7 @@ impl<T, S> Bjkst<T, S> {
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut bjkst: Bjkst<usize> = Bjkst::new();
+    /// let mut bjkst = Bjkst::new();
     /// assert!(bjkst.is_empty());
     /// bjkst.insert(&1);
     /// assert!(!bjkst.is_empty());
@@ -205,7 +205,7 @@ impl<T, S> Bjkst<T, S> {
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut bjkst: Bjkst<usize> = Bjkst::new();
+    /// let mut bjkst = Bjkst::<usize>::new();
     ///
     /// bjkst.insert_hash(0x12345678);
     /// bjkst.insert_hash(0x12345678);
@@ -394,7 +394,7 @@ where
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut bjkst: Bjkst<i32> = Bjkst::new();
+    /// let mut bjkst = Bjkst::new();
     ///
     /// bjkst.insert(&2);
     /// bjkst.insert(&2);
@@ -420,7 +420,7 @@ where
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut bjkst: Bjkst<usize> = Bjkst::new();
+    /// let mut bjkst = Bjkst::new();
     /// for i in 0..100_000 {
     ///     bjkst.insert(&i);
     /// }
@@ -451,8 +451,8 @@ where
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let lhs: Bjkst<usize> = Bjkst::from_iter(0..75_000);
-    /// let rhs: Bjkst<usize> = Bjkst::from_iter(25_000..100_000);
+    /// let lhs = Bjkst::<i32>::from_iter(0..75_000);
+    /// let rhs = Bjkst::<i32>::from_iter(25_000..100_000);
     /// let bjkst = &lhs | &rhs;
     /// assert!((99_000..=101_000).contains(&bjkst.len()));
     /// ```
@@ -486,8 +486,8 @@ where
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let mut lhs: Bjkst<i32> = Bjkst::from_iter(1..75_000);
-    /// let rhs: Bjkst<i32> = Bjkst::from_iter(25_000..100_000);
+    /// let mut lhs = Bjkst::<i32>::from_iter(1..75_000);
+    /// let rhs = Bjkst::<i32>::from_iter(25_000..100_000);
     /// lhs |= &rhs;
     /// assert!((99_000..=101_000).contains(&lhs.len()));
     /// ```
@@ -589,7 +589,7 @@ where
     /// ```
     /// use uniq_ch::Bjkst;
     ///
-    /// let bjkst1: Bjkst<i32> = Bjkst::from([1, 2, 3, 4, 5]);
+    /// let bjkst1 = Bjkst::<i32>::from([1, 2, 3, 4, 5]);
     /// let bjkst2: Bjkst<i32> = [1, 2, 3, 4, 5].into();
     /// assert_eq!(bjkst1.len(), bjkst2.len());
     /// ```
