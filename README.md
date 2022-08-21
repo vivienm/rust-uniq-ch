@@ -14,7 +14,7 @@ settings.
 [ClickHouseRefUniq]: <https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/>
 [ClickHouseSrcUniq]: <https://github.com/ClickHouse/ClickHouse/blob/894b1b163e982c6929ab451467f6e253e7e3648b/src/AggregateFunctions/UniquesHashSet.h>
 [Repository]: https://github.com/vivienm/rust-uniq-ch
-[Documentation]: https://vivienm.github.io/rust-uniq-ch/
+[Documentation]: https://vivienm.github.io/rust-uniq-ch/uniq_ch/
 
 ## Examples
 
