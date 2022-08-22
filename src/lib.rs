@@ -434,8 +434,11 @@ where
         // Pseudo-random remainder - in order to hide that the number is divisible by a of two.
         res += self.hash(&self.count) & ((1 << self.skip_degree) - 1);
 
-        let p32 = 1 << 32;
-        f64::round(p32 as f64 * (f64::ln(p32 as f64) - f64::ln((p32 - res) as f64))) as usize
+        // Correction of a systematic error due to collisions during hashing.
+        // Seems broken due to rounding errors, and not needed with 64-bit hashes.
+        // let p64 = 2.0f64.powi(64);
+        // f64::round(p64 * (f64::ln(p64) - f64::ln(p64 - res as f64))) as usize
+        res as usize
     }
 }
 
