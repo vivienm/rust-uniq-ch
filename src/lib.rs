@@ -305,6 +305,8 @@ impl<T, S> Bjkst<T, S> {
             if let Some(hash) = hash {
                 self.hashes[i] = None;
                 self.reinsert(hash);
+            } else {
+                break;
             }
         }
     }
