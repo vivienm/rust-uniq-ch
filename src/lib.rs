@@ -428,7 +428,7 @@ where
         if 0 == self.skip_degree {
             return self.count;
         }
-        let mut res = self.count as u64 * (1 << self.skip_degree) as u64;
+        let mut res = self.count as u64 * (1 << self.skip_degree);
         res += self.hash(&self.count) & ((1 << self.skip_degree) - 1);
         let p32 = 1 << 32;
         f64::round(p32 as f64 * (f64::ln(p32 as f64) - f64::ln((p32 - res) as f64))) as usize
