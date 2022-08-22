@@ -299,7 +299,7 @@ impl<T, S> Bjkst<T, S> {
         }
 
         // We must process first collision resolution chain once again.
-        // Look at the comment in function `resize_with_degree`.
+        // Look at the comment in function `grow_to`.
         for i in 0..self.hashes.len() {
             let hash = self.hashes[i];
             if let Some(hash) = hash {
