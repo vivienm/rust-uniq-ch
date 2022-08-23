@@ -15,6 +15,4 @@ macro_rules! bench_len {
     };
 }
 
-bench_len!(len_1e3, 1_000);
-
 bench_len!(len_1e6, 1_000_000);
