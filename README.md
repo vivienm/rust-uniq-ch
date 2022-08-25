@@ -1,7 +1,7 @@
 # uniq-ch
 
-A Rust implementation of [ClickHouse `uniq`][ClickHouseRefUniq] data structure
-for counting distinct elements in a data stream ([source][ClickHouseSrcUniq]).
+A Rust library for counting distinct elements in a stream,
+using [ClickHouse uniq][ClickHouseRefUniq] data structure.
 
 This uses [BJKST][BarYossef+02], a probabilistic algorithm that relies on
 adaptive sampling and provides fast, accurate and deterministic results.
@@ -10,9 +10,8 @@ settings.
 
 [Repository] | [Documentation]
 
-[BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
 [ClickHouseRefUniq]: <https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/>
-[ClickHouseSrcUniq]: <https://github.com/ClickHouse/ClickHouse/blob/894b1b163e982c6929ab451467f6e253e7e3648b/src/AggregateFunctions/UniquesHashSet.h>
+[BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
 [Repository]: https://github.com/vivienm/rust-uniq-ch
 [Documentation]: https://vivienm.github.io/rust-uniq-ch/uniq_ch/
 

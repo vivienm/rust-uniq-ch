@@ -2,7 +2,7 @@
 name = "uniq-ch"
 version = "0.1.0"
 edition = "2021"
-description = "A Rust implementation of ClickHouse uniq data structure for counting distinct elements."
+description = "A Rust library for counting distinct elements in a stream, using ClickHouse uniq data structure."
 repository = "https://github.com/vivienm/rust-uniq-ch/"
 documentation = "https://vivienm.github.io/rust-uniq-ch/uniq_ch/"
 license = "MIT"
