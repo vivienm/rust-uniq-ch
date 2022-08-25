@@ -1,4 +1,9 @@
-DEFAULT: check test fmt clippy doc typos deny
+DEFAULT: fmt check test clippy doc deny typos
+export RUSTFLAGS := "-D warnings"
+export RUSTDOCFLAGS := "-D warnings"
+
+fmt:
+    cargo fmt --all --check
 
 build:
     cargo build --all-features
@@ -6,20 +11,17 @@ build:
 check:
     cargo check --all-features
 
-test:
-    cargo test --all-features
+test *args="":
+    cargo test --all-features {{args}}
 
-fmt:
-    cargo fmt --all -- --check
+clippy *args="":
+    cargo clippy {{args}}
 
-clippy:
-    cargo clippy -- -D warnings
-
-doc:
-    cargo rustdoc --all-features -- -D warnings
-
-typos:
-    typos
+doc *args="":
+    cargo doc --no-deps --all-features {{args}}
 
 deny:
     cargo deny --all-features check
+
+typos:
+    typos

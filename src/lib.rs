@@ -1,3 +1,5 @@
+#![cfg_attr(doc, feature(doc_auto_cfg))]
+
 //! A Rust library for counting distinct elements in a stream,
 //! using [ClickHouse uniq][ClickHouseRefUniq] data structure.
 //!
@@ -6,8 +8,11 @@
 //! Two BJKSTs can be merged, making the data structure well suited for map-reduce
 //! settings.
 //!
+//! [Repository]
+//!
 //! [ClickHouseRefUniq]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/
 //! [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
+//! [Repository]: https://github.com/vivienm/rust-uniq-ch
 //!
 //! # Examples
 //!
@@ -23,7 +28,7 @@
 //! // Count the distinct elements.
 //! assert!((99_000..101_000).contains(&bjkst.len()));
 //! ```
-#![cfg_attr(doc, feature(doc_auto_cfg))]
+
 use std::{
     collections::hash_map::DefaultHasher,
     hash::{BuildHasher, BuildHasherDefault, Hash, Hasher},

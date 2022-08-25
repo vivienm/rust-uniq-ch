@@ -8,12 +8,11 @@ adaptive sampling and provides fast, accurate and deterministic results.
 Two BJKSTs can be merged, making the data structure well suited for map-reduce
 settings.
 
-[Repository] | [Documentation]
+[Documentation]
 
 [ClickHouseRefUniq]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/
 [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
-[Repository]: https://github.com/vivienm/rust-uniq-ch
-[Documentation]: https://vivienm.github.io/rust-uniq-ch/uniq_ch/
+[Documentation]: https://vivienm.github.io/rust-uniq-ch/docs/uniq_ch/
 
 ## Examples
 
