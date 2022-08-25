@@ -238,7 +238,10 @@ impl<T, S> Bjkst<T, S> {
         };
 
         let mut i = self.expected_index(hash);
-        while let Some(hash_i) = self.hashes[i] && hash_i != hash {
+        while let Some(hash_i) = self.hashes[i] {
+            if hash_i == hash {
+                break;
+            }
             i += 1;
             i &= self.mask();
         }
@@ -354,15 +357,20 @@ impl<T, S> Bjkst<T, S> {
             }
 
             let mut hash_h = self.hashes[j];
-            while let Some(hash_j) = hash_h && hash_j != hash_i {
+            while let Some(hash_j) = hash_h {
+                if hash_j == hash_i {
+                    break;
+                }
                 j += 1;
                 j &= self.mask();
                 hash_h = self.hashes[j];
             }
 
             // The element remained in its place.
-            if let Some(hash_j) = hash_h && hash_j == hash_i {
-                continue;
+            if let Some(hash_j) = hash_h {
+                if hash_j == hash_i {
+                    continue;
+                }
             }
 
             self.hashes[j] = Some(hash_i);
@@ -545,7 +553,7 @@ where
 
 impl<'a, T, S> Extend<&'a T> for Bjkst<T, S>
 where
-    T: Hash,
+    T: Hash + 'a,
     S: BuildHasher,
 {
     fn extend<I>(&mut self, iter: I)
@@ -608,7 +616,7 @@ where
 
 impl<'a, T, S> FromIterator<&'a T> for Bjkst<T, S>
 where
-    T: Hash,
+    T: Hash + 'a,
     S: BuildHasher + Default,
 {
     fn from_iter<I>(iter: I) -> Self
