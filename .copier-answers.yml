@@ -1,7 +1,7 @@
 # Changes here will be overwritten by Copier. NEVER EDIT MANUALLY.
 
 _commit: a557348
-_src_path: /home/vivien/perso/projects/copier/rust
+_src_path: gh:vivienm/copier-rust
 author_fullname: Vivien Maisonneuve
 copyright_date: '2022'
 copyright_holder: Vivien Maisonneuve
