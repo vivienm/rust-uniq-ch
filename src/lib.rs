@@ -6,7 +6,7 @@
 //! Two BJKSTs can be merged, making the data structure well suited for map-reduce
 //! settings.
 //!
-//! [ClickHouseRefUniq]: <https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/>
+//! [ClickHouseRefUniq]: https://clickhouse.com/docs/en/sql-reference/aggregate-functions/reference/uniq/
 //! [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
 //!
 //! # Examples
@@ -51,7 +51,7 @@ const INITIAL_SIZE_DEGREE: u8 = 4;
 /// A [BJKST][BarYossef+02] data structure to estimate the number of distinct elements in a data
 /// stream.
 ///
-/// [BarYossef+02]: <https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276>
+/// [BarYossef+02]: https://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.12.6276
 ///
 /// # Examples
 ///
