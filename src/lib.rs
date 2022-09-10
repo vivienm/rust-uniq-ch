@@ -443,7 +443,7 @@ where
 
         let mut res = self.count as u64 * (1 << self.skip_degree);
 
-        // Pseudo-random remainder - in order to hide that the number is divisible by a of two.
+        // Pseudo-random remainder - in order to hide that the number is divisible by a power of two.
         res += self.hash(&self.count) & ((1 << self.skip_degree) - 1);
 
         // Correction of a systematic error due to collisions during hashing.
