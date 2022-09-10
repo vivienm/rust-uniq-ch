@@ -138,6 +138,8 @@ impl<T, S> Bjkst<T, S> {
             size_degree,
             skip_degree: 0,
             has_zero: false,
+            // This method is private, so we know that `1 << size_degree` won't overflow.
+            // Else, we may want to use `checked_shl` instead.
             hashes: vec![None; 1 << size_degree as usize],
         }
     }
