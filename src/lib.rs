@@ -289,7 +289,7 @@ impl<T, S> Bjkst<T, S> {
         1 << (self.size_degree - 1)
     }
 
-    /// Parge the BJKST data structure, deleting all values not divisible by `2 ** skip_degree`.
+    /// Purge the BJKST data structure, deleting all values not divisible by `2 ** skip_degree`.
     /// This must be called after increasing the skip degree.
     fn purge(&mut self) {
         for i in 0..self.hashes.len() {
