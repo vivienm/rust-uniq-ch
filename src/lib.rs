@@ -250,7 +250,7 @@ impl<T, S> Bjkst<T, S> {
                 break;
             }
             i += 1;
-            i &= self.mask();
+            i %= self.hashes.len();
         }
         if self.hashes[i].is_none() {
             self.hashes[i] = Some(hash);
@@ -276,12 +276,7 @@ impl<T, S> Bjkst<T, S> {
 
     #[inline]
     fn expected_index(&self, hash: NonZeroU64) -> usize {
-        (hash.get() as usize >> BITS_FOR_SKIP) & self.mask()
-    }
-
-    #[inline]
-    fn mask(&self) -> usize {
-        self.hashes.len() - 1
+        (hash.get() as usize >> BITS_FOR_SKIP) % self.hashes.len()
     }
 
     #[inline]
@@ -369,7 +364,7 @@ impl<T, S> Bjkst<T, S> {
                     break;
                 }
                 j += 1;
-                j &= self.mask();
+                j %= self.hashes.len();
                 hash_h = self.hashes[j];
             }
 
@@ -391,7 +386,7 @@ impl<T, S> Bjkst<T, S> {
         let mut i = self.expected_index(hash);
         while self.hashes[i].is_some() {
             i += 1;
-            i &= self.mask();
+            i %= self.hashes.len();
         }
         self.hashes[i] = Some(hash);
     }
