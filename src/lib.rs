@@ -144,7 +144,7 @@ impl<T, S> Bjkst<T, S> {
         }
     }
 
-    /// Returns a reference to the BJKST's [`BuildHasher`].
+    /// Returns a reference to the BJKST data structure's [`BuildHasher`].
     ///
     /// # Examples
     ///
@@ -162,7 +162,7 @@ impl<T, S> Bjkst<T, S> {
         &self.build_hasher
     }
 
-    /// Clears the BJKST, removing all values.
+    /// Clears the BJKST data structure, removing all values.
     ///
     /// # Examples
     ///
@@ -183,7 +183,7 @@ impl<T, S> Bjkst<T, S> {
         self.hashes.fill(None);
     }
 
-    /// Returns `true` if the BJKST contains no elements.
+    /// Returns `true` if the BJKST data structure contains no elements.
     ///
     /// # Examples
     ///
@@ -200,7 +200,7 @@ impl<T, S> Bjkst<T, S> {
         self.count == 0
     }
 
-    /// Adds a hash value to the BJKST.
+    /// Adds a hash value to the BJKST data structure.
     ///
     /// This may be handy when the hash is previously computed, to avoid computing twice.
     /// Hash values need to be uniformly distributed over [u64] for an accurate total count.
@@ -232,7 +232,7 @@ impl<T, S> Bjkst<T, S> {
         hash == (hash >> self.skip_degree) << self.skip_degree
     }
 
-    /// Unconditionally inserts a value into the BJKST.
+    /// Unconditionally inserts a value into the BJKST data structure.
     fn do_insert(&mut self, hash: u64) {
         let hash = match NonZeroU64::new(hash) {
             None if self.has_zero => return,
@@ -258,7 +258,7 @@ impl<T, S> Bjkst<T, S> {
         }
     }
 
-    /// Resize the BJKST if the buffer is full enough.
+    /// Resize the BJKST data structure if the buffer is full enough.
     /// If there are too many items, then throw half of them and repeat until their count is below
     /// the threshold.
     fn adjust_to_fit(&mut self) {
@@ -289,7 +289,7 @@ impl<T, S> Bjkst<T, S> {
         1 << (self.size_degree - 1)
     }
 
-    /// Parge the BJKST, deleting all values not divisible by `2 ** skip_degree`.
+    /// Parge the BJKST data structure, deleting all values not divisible by `2 ** skip_degree`.
     /// This must be called after increasing the skip degree.
     fn purge(&mut self) {
         for i in 0..self.hashes.len() {
@@ -385,7 +385,7 @@ impl<T, S> Bjkst<T, S> {
         }
     }
 
-    /// Reinserts a value into the BJKST.
+    /// Reinserts a value into the BJKST data structure.
     /// Used when increasing the size of the buffer, as well as when reading from a file.
     fn reinsert(&mut self, hash: NonZeroU64) {
         let mut i = self.expected_index(hash);
