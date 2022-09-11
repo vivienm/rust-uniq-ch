@@ -37,21 +37,9 @@ use std::{
     ops::{BitOr, BitOrAssign},
 };
 
-/// The maximum degree of buffer size before the values are discarded.
-const MAX_SIZE_DEGREE: u8 = 17;
+pub use crate::precision::Precision;
 
-/// The maximum number of elements before the values are discarded.
-const MAX_SIZE: usize = 1 << (MAX_SIZE_DEGREE - 1);
-
-/// The number of least significant bits used for thinning.
-///
-/// The remaining high-order bits are used to determine the position in the hash table.
-/// (High-order bits are taken because the younger bits will be constant after dropping some of the
-/// values.)
-const BITS_FOR_SKIP: u8 = 64 - MAX_SIZE_DEGREE;
-
-/// Initial buffer size degree.
-const INITIAL_SIZE_DEGREE: u8 = 4;
+pub mod precision;
 
 /// A [BJKST][BarYossef+02] data structure to estimate the number of distinct elements in a data
 /// stream.
@@ -75,16 +63,22 @@ const INITIAL_SIZE_DEGREE: u8 = 4;
 
 #[derive(Debug)]
 pub struct Bjkst<T, S = BuildHasherDefault<DefaultHasher>> {
+    /// For typechecking.
     phantom: PhantomData<T>,
+    /// Computes hashes of inserted elements.
     build_hasher: S,
-    /// The number of elements.
+    /// The number of elements in the table.
     count: usize,
-    /// The size of the table as a power of `2`.
+    /// The current size of the table, as a power of `2`.
     size_degree: u8,
     /// Skip elements not divisible by `2 ** skip_degree`.
     skip_degree: u8,
-    /// The hash table contains an element with a hash value of `0`.
+    /// The maximum number of elements in the table, as a power of `2`.
+    /// The table is twice bigger than this value.
+    precision: Precision,
+    /// An element with a hash value of `0` has been inserted.
     has_zero: bool,
+    /// The table of hash values.
     hashes: Vec<Option<NonZeroU64>>,
 }
 
@@ -104,7 +98,62 @@ impl<T> Bjkst<T, BuildHasherDefault<DefaultHasher>> {
     }
 }
 
+impl<T, S> Bjkst<T, S>
+where
+    S: Default,
+{
+    /// Creates an empty `Bjkst` with the specified precision.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uniq_ch::{Bjkst, Precision};
+    ///
+    /// let bjkst = Bjkst::<usize>::with_precision(Precision::P10);
+    /// assert_eq!(bjkst.precision(), Precision::P10);
+    /// ```
+    #[inline]
+    pub fn with_precision(precision: Precision) -> Self {
+        Self::with_precision_and_hasher(precision, S::default())
+    }
+}
+
 impl<T, S> Bjkst<T, S> {
+    /// Creates an empty `Bjkst` with the specified precision, using `hasher` to hash values.
+    ///
+    /// Warning: `hasher` is normally randomly generated, and is designed to allow `Bjkst`s to be
+    /// resistant to attacks that cause many collisions and very poor performance. Setting it
+    /// manually using this function can expose a DoS attack vector.
+    ///
+    /// The `hasher` passed should implement the [`BuildHasher`] trait for the BJKST to be useful,
+    /// see its documentation for details.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use std::collections::hash_map::RandomState;
+    ///
+    /// use uniq_ch::{Bjkst, Precision};
+    ///
+    /// let hasher = RandomState::new();
+    /// let mut bjkst = Bjkst::with_precision_and_hasher(Precision::P10, hasher);
+    /// bjkst.insert(&2);
+    /// ```
+    pub fn with_precision_and_hasher(precision: Precision, hasher: S) -> Self {
+        let size_degree = precision.initial_size_degree();
+        Self {
+            phantom: PhantomData,
+            build_hasher: hasher,
+            count: 0,
+            size_degree,
+            precision,
+            skip_degree: 0,
+            has_zero: false,
+            // Precision range guarantees to avoid overflows.
+            hashes: vec![None; 1usize << size_degree],
+        }
+    }
+
     /// Creates a new empty `Bjkst` which will use the given hasher to hash values.
     ///
     /// Warning: `hasher` is normally randomly generated, and is designed to allow `Bjkst`s to be
@@ -127,21 +176,22 @@ impl<T, S> Bjkst<T, S> {
     /// ```
     #[inline]
     pub fn with_hasher(hasher: S) -> Self {
-        Self::with_size_and_hasher(INITIAL_SIZE_DEGREE, hasher)
+        Self::with_precision_and_hasher(Precision::default(), hasher)
     }
 
-    fn with_size_and_hasher(size_degree: u8, hasher: S) -> Self {
-        Self {
-            phantom: PhantomData,
-            build_hasher: hasher,
-            count: 0,
-            size_degree,
-            skip_degree: 0,
-            has_zero: false,
-            // This method is private, so we know that `1 << size_degree` won't overflow.
-            // Else, we may want to use `checked_shl` instead.
-            hashes: vec![None; 1 << size_degree as usize],
-        }
+    /// Returns the precision of the `Bjkst`.
+    ///
+    /// # Examples
+    ///
+    /// ```
+    /// use uniq_ch::{Bjkst, Precision};
+    ///
+    /// let bjkst = Bjkst::<usize>::with_precision(Precision::P10);
+    /// assert_eq!(bjkst.precision(), Precision::P10);
+    /// ```
+    #[inline]
+    pub const fn precision(&self) -> Precision {
+        self.precision
     }
 
     /// Returns a reference to the BJKST data structure's [`BuildHasher`].
@@ -176,7 +226,7 @@ impl<T, S> Bjkst<T, S> {
     /// ```
     pub fn clear(&mut self) {
         self.count = 0;
-        self.size_degree = INITIAL_SIZE_DEGREE;
+        self.size_degree = self.precision.initial_size_degree();
         self.skip_degree = 0;
         self.has_zero = false;
         self.hashes.truncate(1 << self.size_degree);
@@ -205,7 +255,7 @@ impl<T, S> Bjkst<T, S> {
     /// This may be handy when the hash is previously computed, to avoid computing twice.
     /// Hash values need to be uniformly distributed over [u64] for an accurate total count.
     ///
-    /// In all other cases, use [`insert`][`Bjkst::insert`] instead.
+    /// In all other cases, use [`insert`][Bjkst::insert] instead.
     ///
     /// # Examples
     ///
@@ -262,9 +312,10 @@ impl<T, S> Bjkst<T, S> {
     /// If there are too many items, then throw half of them and repeat until their count is below
     /// the threshold.
     fn adjust_to_fit(&mut self) {
-        if self.count as usize > self.max_fill() {
-            if self.count > MAX_SIZE {
-                while self.count > MAX_SIZE {
+        if self.count as usize > self.fill_threshold() {
+            let purge_threshold = self.purge_threshold();
+            if self.count > purge_threshold {
+                while self.count > purge_threshold {
                     self.skip_degree += 1;
                     self.purge();
                 }
@@ -276,12 +327,17 @@ impl<T, S> Bjkst<T, S> {
 
     #[inline]
     fn expected_index(&self, hash: NonZeroU64) -> usize {
-        (hash.get() as usize >> BITS_FOR_SKIP) % self.hashes.len()
+        (hash.get() as usize >> self.precision.bits_to_skip()) % self.hashes.len()
     }
 
     #[inline]
-    const fn max_fill(&self) -> usize {
+    const fn fill_threshold(&self) -> usize {
         1 << (self.size_degree - 1)
+    }
+
+    #[inline]
+    const fn purge_threshold(&self) -> usize {
+        1 << self.precision.get()
     }
 
     /// Purge the BJKST data structure, deleting all values not divisible by `2 ** skip_degree`.
@@ -536,6 +592,7 @@ where
             build_hasher: self.build_hasher.clone(),
             count: self.count,
             size_degree: self.size_degree,
+            precision: self.precision,
             skip_degree: self.skip_degree,
             has_zero: self.has_zero,
             hashes: self.hashes.clone(),
@@ -658,6 +715,7 @@ where
         (
             self.count,
             self.size_degree,
+            self.precision,
             self.skip_degree,
             self.has_zero,
             &self.hashes,
@@ -675,11 +733,12 @@ where
     where
         D: serde::Deserializer<'de>,
     {
-        let (count, size_degree, skip_degree, has_zero, hashes) =
+        let (count, size_degree, precision, skip_degree, has_zero, hashes) =
             serde::Deserialize::deserialize(deserializer)?;
         Ok(Self {
             count,
             size_degree,
+            precision,
             skip_degree,
             has_zero,
             hashes,
