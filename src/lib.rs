@@ -48,7 +48,7 @@ const MAX_SIZE: usize = 1 << (MAX_SIZE_DEGREE - 1);
 /// The remaining high-order bits are used to determine the position in the hash table.
 /// (High-order bits are taken because the younger bits will be constant after dropping some of the
 /// values.)
-const BITS_FOR_SKIP: u8 = 32 - MAX_SIZE_DEGREE;
+const BITS_FOR_SKIP: u8 = 64 - MAX_SIZE_DEGREE;
 
 /// Initial buffer size degree.
 const INITIAL_SIZE_DEGREE: u8 = 4;
