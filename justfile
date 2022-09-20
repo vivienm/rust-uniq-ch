@@ -1,15 +1,13 @@
 DEFAULT: fmt check test clippy doc deny typos
-export RUSTFLAGS := "-D warnings"
-export RUSTDOCFLAGS := "-D warnings"
 
 fmt:
-    cargo fmt --all --check
+    cargo fmt --check
 
-build:
-    cargo build --all-features
+build *args="":
+    cargo build --all-features {{args}}
 
 check:
-    cargo check --all-features
+    cargo hack --feature-powerset check --all-targets
 
 test *args="":
     cargo test --all-features {{args}}
