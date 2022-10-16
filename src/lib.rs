@@ -252,6 +252,13 @@ impl<T, S> Bjkst<T, S> {
 
     /// Adds a hash value to the BJKST data structure.
     ///
+    /// Returns whether the value was newly inserted. That is:
+    ///
+    /// - If the value is not skipped, and the BJKST data structure did not previously contain this
+    ///   value, `true` is returned.
+    /// - If the value is skipped or the BJKST data structure already contained this value, `false`
+    ///   is returned.
+    ///
     /// This may be handy when the hash is previously computed, to avoid computing twice.
     /// Hash values need to be uniformly distributed over [u64] for an accurate total count.
     ///
@@ -264,14 +271,19 @@ impl<T, S> Bjkst<T, S> {
     ///
     /// let mut bjkst = Bjkst::<usize>::new();
     ///
-    /// bjkst.insert_hash(0x12345678);
-    /// bjkst.insert_hash(0x12345678);
+    /// assert_eq!(bjkst.insert_hash(0x12345678), true);
+    /// assert_eq!(bjkst.insert_hash(0x12345678), false);
     /// assert_eq!(bjkst.len(), 1);
     /// ```
-    pub fn insert_hash(&mut self, hash: u64) {
+    pub fn insert_hash(&mut self, hash: u64) -> bool {
         if self.should_keep(hash) {
+            let count = self.count;
             self.do_insert(hash);
+            let inserted = count != self.count;
             self.adjust_to_fit();
+            inserted
+        } else {
+            false
         }
     }
 
@@ -453,7 +465,14 @@ where
     T: Hash,
     S: BuildHasher,
 {
-    /// Adds a value to the BJKST.
+    /// Adds a value to the BJKST data structure.
+    ///
+    /// Returns whether the value was newly inserted. That is:
+    ///
+    /// - If the value is not skipped, and the BJKST data structure did not previously contain this
+    ///   value, `true` is returned.
+    /// - If the value is skipped or the BJKST data structure already contained this value, `false`
+    ///   is returned.
     ///
     /// # Examples
     ///
@@ -462,12 +481,12 @@ where
     ///
     /// let mut bjkst = Bjkst::new();
     ///
-    /// bjkst.insert(&2);
-    /// bjkst.insert(&2);
+    /// assert_eq!(bjkst.insert(&2), true);
+    /// assert_eq!(bjkst.insert(&2), false);
     /// assert_eq!(bjkst.len(), 1);
     /// ```
-    pub fn insert(&mut self, value: &T) {
-        self.insert_hash(self.hash(value));
+    pub fn insert(&mut self, value: &T) -> bool {
+        self.insert_hash(self.hash(value))
     }
 
     fn hash<Q>(&self, value: &Q) -> u64
