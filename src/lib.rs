@@ -312,7 +312,7 @@ impl<T, S> Bjkst<T, S> {
     /// If there are too many items, then throw half of them and repeat until their count is below
     /// the threshold.
     fn adjust_to_fit(&mut self) {
-        if self.count as usize > self.fill_threshold() {
+        if self.count > self.fill_threshold() {
             let purge_threshold = self.purge_threshold();
             if self.count > purge_threshold {
                 while self.count > purge_threshold {
