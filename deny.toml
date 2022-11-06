@@ -1,7 +1,6 @@
 [licenses]
 allow = [
   "Apache-2.0",
-  "ISC",
   "MIT",
   "MPL-2.0",
   "Zlib",
