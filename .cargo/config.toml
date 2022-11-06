@@ -1,5 +1,0 @@
-[build]
-rustdocflags = ["-D", "warnings"]
-
-[target.'cfg(all())']
-rustflags = ["-D", "warnings"]

@@ -31,6 +31,9 @@ jobs:
           ${{ runner.os }}-cargo-
     - run: "cargo install just cargo-hack cargo-deny typos-cli"
     - run: "just"
+      env:
+        RUSTFLAGS: "-D warnings"
+        RUSTDOCFLAGS: "-D warnings"
     - uses: "actions/upload-artifact@v3"
       with:
         name: "doc"
