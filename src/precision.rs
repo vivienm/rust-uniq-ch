@@ -4,8 +4,8 @@ use std::{cmp::min, fmt, str::FromStr};
 
 /// The precision of the BJKST data structure, in bits.
 ///
-/// A [`Bjkst`](super::Bjkst) with precision `p` can store up to `2^p` elements before shrinking.
-/// The internal array will be at most twice as large.
+/// A [`Bjkst`](super::Bjkst) with precision `p` can store up to `2^p` elements
+/// before shrinking. The internal array will be at most twice as large.
 ///
 /// Default precision is 16 bits, that is, 65,536 elements.
 #[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
@@ -247,9 +247,9 @@ impl Precision {
 
     /// The number of least significant bits used for thinning.
     ///
-    /// The remaining high-order bits are used to determine the position in the hash table.
-    /// (High-order bits are taken because the younger bits will be constant after dropping some of the
-    /// values.)
+    /// The remaining high-order bits are used to determine the position in the
+    /// hash table. (High-order bits are taken because the younger bits will
+    /// be constant after dropping some of the values.)
     pub(crate) const fn bits_to_skip(&self) -> u8 {
         64 - self.max_size_degree()
     }
@@ -314,7 +314,8 @@ impl<'de> serde::Deserialize<'de> for Precision {
     }
 }
 
-/// The error type returned when converting an integer into a [`Precision`] fails.
+/// The error type returned when converting an integer into a [`Precision`]
+/// fails.
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
 pub struct TryFromIntError(());
 
@@ -328,8 +329,9 @@ impl ::std::error::Error for TryFromIntError {}
 
 /// An error which can be returned when parsing a precision.
 ///
-/// This error is used as the error type for the [`from_str_radix()`][Precision::from_str_radix]
-/// method on the [`Precision`] type.
+/// This error is used as the error type for the
+/// [`from_str_radix()`][Precision::from_str_radix] method on the [`Precision`]
+/// type.
 ///
 /// # Examples
 ///
@@ -368,7 +370,8 @@ impl fmt::Display for ParseError {
     }
 }
 
-/// Enum to store the various types of errors that can cause parsing a precision to fail.
+/// Enum to store the various types of errors that can cause parsing a precision
+/// to fail.
 ///
 /// # Examples
 ///
@@ -388,8 +391,8 @@ pub enum ParseErrorKind {
     Empty,
     /// Contains an invalid digit in its context.
     ///
-    /// Among other causes, this variant will be constructed when parsing a string that
-    /// contains a non-ASCII char.
+    /// Among other causes, this variant will be constructed when parsing a
+    /// string that contains a non-ASCII char.
     InvalidDigit,
     /// The integer is too large to fit in the precision range.
     AboveMax,

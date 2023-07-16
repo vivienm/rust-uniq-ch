@@ -63,7 +63,8 @@ fn main() -> anyhow::Result<()> {
     let build_hasher = RandomState::new();
 
     for i in 1..=args.size {
-        // Compute the hash value manually, to avoid the overhead of hashing in the benchmark.
+        // Compute the hash value manually, to avoid the overhead of hashing in the
+        // benchmark.
         let mut hasher = build_hasher.build_hasher();
         i.hash(&mut hasher);
         let hash = hasher.finish();
