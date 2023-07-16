@@ -8,7 +8,7 @@ use std::{cmp::min, fmt, str::FromStr};
 /// before shrinking. The internal array will be at most twice as large.
 ///
 /// Default precision is 16 bits, that is, 65,536 elements.
-#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug)]
+#[derive(Copy, Clone, Eq, PartialEq, Ord, PartialOrd, Hash, Debug, Default)]
 #[repr(u8)]
 pub enum Precision {
     #[non_exhaustive]
@@ -43,6 +43,7 @@ pub enum Precision {
     /// 15-bit precision.
     P15,
     /// 16-bit precision (default).
+    #[default]
     P16,
     /// 17-bit precision.
     P17,
@@ -259,13 +260,6 @@ impl fmt::Display for Precision {
     #[inline]
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.get())
-    }
-}
-
-impl Default for Precision {
-    #[inline]
-    fn default() -> Self {
-        Precision::P16
     }
 }
 
