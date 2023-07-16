@@ -5,11 +5,13 @@ unsound = "deny"
 yanked = "deny"
 notice = "deny"
 
+[bans]
+multiple-versions = "allow"
+
 [licenses]
 allow = [
   "Apache-2.0",
   "MIT",
-  "MPL-2.0",
   "Zlib",
 ]
 
