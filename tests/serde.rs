@@ -5,11 +5,9 @@ use std::assert_eq;
 use highway::HighwayBuildHasher;
 use uniq_ch::Bjkst;
 
-const SERIALIZED: &'static str = "[\
-4,4,16,0,false,[\
-null,6120665149970903695,null,null,null,null,14520555826795478172,793563473396344097,\
-null,null,null,null,16707926894801950140,null,null,null\
-]]";
+const SERIALIZED: &'static str = "[4,4,16,0,false,[null,6120665149970903695,null,null,null,null,\
+                                  14520555826795478172,793563473396344097,null,null,null,null,\
+                                  16707926894801950140,null,null,null]]";
 
 #[test]
 fn serialize() {
