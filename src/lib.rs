@@ -503,9 +503,7 @@ where
     where
         Q: Hash + ?Sized,
     {
-        let mut hasher = self.build_hasher.build_hasher();
-        value.hash(&mut hasher);
-        hasher.finish()
+        self.build_hasher.hash_one(value)
     }
 
     /// Calculates the approximate number of different elements.

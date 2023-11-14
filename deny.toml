@@ -12,7 +12,6 @@ multiple-versions = "allow"
 allow = [
   "Apache-2.0",
   "MIT",
-  "Zlib",
 ]
 
 [[licenses.exceptions]]
