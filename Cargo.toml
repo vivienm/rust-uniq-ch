@@ -6,6 +6,7 @@ description = "A Rust library for counting distinct elements in a stream, using 
 repository = "https://github.com/vivienm/rust-uniq-ch"
 documentation = "https://vivienm.github.io/rust-uniq-ch/docs/uniq_ch/"
 license = "MIT"
+publish = false
 
 [dependencies]
 serde = { version = "1.0.171", features = ["derive"], optional = true }
