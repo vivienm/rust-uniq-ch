@@ -304,7 +304,7 @@ impl<'de> serde::Deserialize<'de> for Precision {
         D: serde::Deserializer<'de>,
     {
         let value: u8 = serde::Deserialize::deserialize(deserializer)?;
-        Ok(Precision::try_from(value).map_err(serde::de::Error::custom)?)
+        Precision::try_from(value).map_err(serde::de::Error::custom)
     }
 }
 
@@ -407,18 +407,18 @@ mod tests {
 
     #[test]
     fn new_get() {
-        for precision in Precision::variants().iter().copied() {
-            assert_eq!(precision, Precision::new(precision.get()).unwrap());
+        for precision in Precision::variants().iter() {
+            assert_eq!(*precision, Precision::new(precision.get()).unwrap());
         }
     }
 
     #[test]
     fn variants() {
-        let mut variants: Vec<_> = Precision::variants().iter().copied().collect();
+        let mut variants: Vec<_> = Precision::variants().iter().collect();
         variants.reverse();
         for precision_u8 in Precision::MIN.get()..=Precision::MAX.get() {
             let precision = Precision::new(precision_u8).unwrap();
-            assert!(precision == variants.pop().unwrap());
+            assert!(precision == *variants.pop().unwrap());
         }
         assert!(variants.is_empty());
     }

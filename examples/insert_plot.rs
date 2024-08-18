@@ -1,6 +1,6 @@
 use std::{
     collections::hash_map::RandomState,
-    hash::{BuildHasher, Hash, Hasher},
+    hash::BuildHasher,
     path::{Path, PathBuf},
     time::Duration,
 };
@@ -48,9 +48,9 @@ where
                 .enumerate()
                 .map(|(i, duration)| (i, duration.as_nanos() as f64)),
             0.0,
-            &RED.mix(0.2),
+            RED.mix(0.2),
         )
-        .border_style(&RED),
+        .border_style(RED),
     )?;
 
     Ok(())
@@ -65,9 +65,7 @@ fn main() -> anyhow::Result<()> {
     for i in 1..=args.size {
         // Compute the hash value manually, to avoid the overhead of hashing in the
         // benchmark.
-        let mut hasher = build_hasher.build_hasher();
-        i.hash(&mut hasher);
-        let hash = hasher.finish();
+        let hash = build_hasher.hash_one(i);
 
         let start = std::time::Instant::now();
         bjkst.insert_hash(hash);
