@@ -1,5 +1,3 @@
-#![warn(missing_docs)]
-
 //! A Rust library for counting distinct elements in a stream,
 //! using [ClickHouse uniq][ClickHouseRefUniq] data structure.
 //!

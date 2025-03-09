@@ -1,3 +1,4 @@
+#![allow(missing_docs)]
 use std::{
     collections::hash_map::RandomState,
     hash::BuildHasher,
